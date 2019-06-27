@@ -42,7 +42,7 @@ use std::fs::File;
 use std::path::Path;
 use std::rc::Rc;
 
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 fn record_fps(last_time: &mut Instant, frames: &mut usize) -> usize {
     let fps = frames.clone();
