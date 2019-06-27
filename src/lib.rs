@@ -42,16 +42,14 @@ use std::fs::File;
 use std::path::Path;
 use std::rc::Rc;
 
-fn record_fps(last_time: &mut f64, frames: &mut usize) {
-    if cfg!(debug) {
-        let now = time::precise_time_s();
-        if now >= *last_time + 1f64 {
-            println!("{} FPS", *frames);
-            *frames = 0;
-            *last_time = now;
-        } else {
-            *frames += 1;
-        }
+fn record_fps(gfx: &mut Gfx, last_time: &mut f64, frames: &mut usize) {
+    let now = time::precise_time_s();
+    if now >= *last_time + 1f64 {
+        gfx.status_line.set(format!("FPS: {}", frames.to_string()));
+        *frames = 0;
+        *last_time = now;
+    } else {
+        *frames += 1;
     }
 }
 
@@ -92,8 +90,9 @@ pub fn start_emulator(rom: Rom, scale: Scale) {
         if ppu_result.new_frame {
             gfx.tick();
             gfx.composite(&mut *cpu.mem.ppu.screen);
-            record_fps(&mut last_time, &mut frames);
             cpu.mem.apu.play_channels();
+
+            record_fps(&mut gfx, &mut last_time, &mut frames);
 
             match cpu.mem.input.check_input() {
                 InputResult::Continue => {}

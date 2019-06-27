@@ -722,9 +722,11 @@ impl Ppu {
 
     #[inline(always)]
     fn putpixel(&mut self, x: usize, y: usize, color: Rgb) {
-        self.screen[(y * SCREEN_WIDTH + x) * 3 + 0] = color.r;
-        self.screen[(y * SCREEN_WIDTH + x) * 3 + 1] = color.g;
-        self.screen[(y * SCREEN_WIDTH + x) * 3 + 2] = color.b;
+        let pixel_position = (y * SCREEN_WIDTH + x) * 3;
+
+        self.screen[pixel_position + 0] = color.r;
+        self.screen[pixel_position + 1] = color.g;
+        self.screen[pixel_position + 2] = color.b;
     }
 
     // Returns the color (pre-palette lookup) of pixel (x,y) within the given tile.
