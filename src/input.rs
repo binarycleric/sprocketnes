@@ -4,9 +4,9 @@
 
 use mem::Mem;
 
+use sdl2::EventPump;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
-use sdl2::Sdl;
 
 use std::ops::Deref;
 
@@ -83,7 +83,7 @@ pub struct GamePadState {
 
 pub struct Input {
     pub gamepad_0: GamePadState,
-    sdl: Sdl, // FIXME: Use a `&'a mut EventPump` instead
+    event_pump: EventPump,
 }
 
 pub enum InputResult {
@@ -94,7 +94,7 @@ pub enum InputResult {
 }
 
 impl Input {
-    pub fn new(sdl: Sdl) -> Input {
+    pub fn new(event_pump: EventPump) -> Input {
         Input {
             gamepad_0: GamePadState {
                 left: false,
@@ -110,7 +110,7 @@ impl Input {
                     val: STROBE_STATE_A,
                 },
             },
-            sdl: sdl,
+            event_pump: event_pump,
         }
     }
 
@@ -129,7 +129,7 @@ impl Input {
     }
 
     pub fn check_input(&mut self) -> InputResult {
-        while let Some(ev) = self.sdl.event_pump().unwrap().poll_event() {
+        while let Some(ev) = self.event_pump.poll_event() {
             match ev {
                 Event::KeyDown {
                     keycode: Some(Keycode::Escape),

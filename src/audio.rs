@@ -7,8 +7,8 @@
 // TODO: This module is very unsafe. Adding a reader-writer audio lock to SDL would help make it
 // safe.
 
+use sdl2::AudioSubsystem;
 use sdl2::audio::{AudioCallback, AudioDevice, AudioDeviceLockGuard, AudioSpecDesired};
-use sdl2::Sdl;
 use std::cmp;
 use std::mem;
 use std::slice::from_raw_parts_mut;
@@ -63,7 +63,7 @@ impl AudioCallback for NesAudioCallback {
 
 /// Audio initialization. If successful, returns a pointer to an allocated `OutputBuffer` that can
 /// be filled with raw audio data.
-pub fn open(sdl: &Sdl) -> Option<*mut OutputBuffer> {
+pub fn open(audio_subsystem: AudioSubsystem) -> Option<*mut OutputBuffer> {
     let output_buffer = Box::new(OutputBuffer {
         samples: [0; SAMPLE_COUNT],
         play_offset: 0,
@@ -81,7 +81,6 @@ pub fn open(sdl: &Sdl) -> Option<*mut OutputBuffer> {
         samples: Some(4410),
     };
 
-    let audio_subsystem = sdl.audio().unwrap();
     unsafe {
         match audio_subsystem.open_playback(None, &spec, |_| NesAudioCallback) {
             Ok(device) => {

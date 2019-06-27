@@ -3,7 +3,7 @@
 //
 
 use sdl2::render::{Canvas, Texture, TextureAccess};
-use sdl2::Sdl;
+use sdl2::VideoSubsystem;
 
 /// Emulated screen width in pixels
 const SCREEN_WIDTH: usize = 256;
@@ -388,12 +388,7 @@ pub struct Gfx {
 }
 
 impl Gfx {
-    pub fn new(scale: Scale) -> (Gfx, Sdl) {
-        // FIXME: Handle SDL better
-
-        let sdl = sdl2::init().unwrap();
-        let video_subsystem = sdl.video().unwrap();
-
+    pub fn new(scale: Scale, video_subsystem: VideoSubsystem) -> Gfx {
         let mut window_builder = video_subsystem.window(
             "sprocketnes",
             (SCREEN_WIDTH as usize * scale.factor()) as u32,
@@ -418,16 +413,13 @@ impl Gfx {
             )
             .unwrap();
 
-        (
-            Gfx {
-                renderer: Box::new(renderer),
-                texture,
-                scale,
-                status_line: StatusLine::new(),
-                _texture_creator: texture_creator,
-            },
-            sdl,
-        )
+        Gfx {
+            renderer: Box::new(renderer),
+            texture,
+            scale,
+            status_line: StatusLine::new(),
+            _texture_creator: texture_creator,
+        }
     }
 
     pub fn tick(&mut self) {
