@@ -123,6 +123,7 @@ impl Mem for MemMap {
             mapper.prg_loadb(addr)
         }
     }
+
     fn storeb(&mut self, addr: u16, val: u8) {
         if addr < 0x2000 {
             self.ram.storeb(addr, val)
