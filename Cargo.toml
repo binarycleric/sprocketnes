@@ -13,3 +13,9 @@ time = "*"
 libc = "*"
 lazy_static = "*"
 
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "emulator"
+harness = false

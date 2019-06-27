@@ -1,4 +1,3 @@
-
 extern crate nes;
 
 use nes::cpu::Cpu;
