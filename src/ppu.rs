@@ -462,7 +462,7 @@ impl Mem for Ppu {
             5 => 0, // PPUSCROLL is read-only
             6 => 0, // PPUADDR is read-only
             7 => self.read_ppudata(),
-            _ => panic!("can't happen"),
+            _ => unreachable!(),
         }
     }
 
@@ -478,7 +478,7 @@ impl Mem for Ppu {
             5 => self.update_ppuscroll(val),
             6 => self.update_ppuaddr(val),
             7 => self.write_ppudata(val),
-            _ => panic!("can't happen"),
+            _ => unreachable!(),
         }
     }
 }

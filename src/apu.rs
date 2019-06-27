@@ -544,7 +544,7 @@ impl Apu {
                 pulse.sweep_cycle = 0;
             }
             2 | 3 => {}
-            _ => panic!("can't happen"),
+            _ => unreachable!(),
         }
     }
 
