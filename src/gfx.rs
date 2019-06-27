@@ -281,13 +281,13 @@ pub fn draw_text(pixels: &mut [u8], surface_width: usize, mut x: isize, y: isize
 }
 
 #[derive(PartialEq, Eq)]
-enum StatusLineAnimation {
+enum TextAnimation {
     Idle,
     Pausing(usize),
     SlidingOut(usize),
 }
 
-use self::StatusLineAnimation::*;
+use self::TextAnimation::*;
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::render::TextureCreator;
 use sdl2::video::Window;
@@ -295,7 +295,7 @@ use sdl2::video::WindowContext;
 
 struct StatusLineText {
     string: String,
-    animation: StatusLineAnimation,
+    animation: TextAnimation,
 }
 
 impl StatusLineText {
