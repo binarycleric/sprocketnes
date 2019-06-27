@@ -17,5 +17,5 @@ lazy_static = "*"
 criterion = "0.2"
 
 [[bench]]
-name = "emulator"
+name = "mem_ram"
 harness = false
