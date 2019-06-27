@@ -42,15 +42,19 @@ use std::fs::File;
 use std::path::Path;
 use std::rc::Rc;
 
-fn record_fps(gfx: &mut Gfx, last_time: &mut f64, frames: &mut usize) {
-    let now = time::precise_time_s();
-    if now >= *last_time + 1f64 {
-        gfx.status_line.set(format!("FPS: {}", frames.to_string()));
+use std::time::{Duration, Instant};
+
+fn record_fps(last_time: &mut Instant, frames: &mut usize) -> usize {
+    let fps = frames.clone();
+
+    if last_time.elapsed().as_secs() > 1u64 {
         *frames = 0;
-        *last_time = now;
+        *last_time = Instant::now();
     } else {
         *frames += 1;
     }
+
+    return fps;
 }
 
 /// Starts the emulator main loop with a ROM and window scaling. Returns when the user presses ESC.
@@ -77,7 +81,7 @@ pub fn start_emulator(rom: Rom, scale: Scale) {
     // TODO: Add a flag to not reset for nestest.log
     cpu.reset();
 
-    let mut last_time = time::precise_time_s();
+    let mut last_time = Instant::now();
     let mut frames = 0;
 
     loop {
@@ -97,7 +101,9 @@ pub fn start_emulator(rom: Rom, scale: Scale) {
             gfx.composite(&mut *cpu.mem.ppu.screen);
             cpu.mem.apu.play_channels();
 
-            record_fps(&mut gfx, &mut last_time, &mut frames);
+            // TODO: This is totally broken. Don't trust it.
+            let fps = record_fps(&mut last_time, &mut frames);
+            gfx.status_line.set(format!("FPS: {}", fps.to_string()));
 
             match cpu.mem.input.check_input() {
                 InputResult::Continue => {}
